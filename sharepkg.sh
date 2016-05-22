@@ -67,7 +67,7 @@ pkglist() {
     [ "${1:-}" ] && args="$args --user $1"
     # $ pm list packages -f
     # package:/data/app/com.google.android.ears-2/base.apk=com.google.android.ears
-    pm list packages $args | sed -r -e 's,package:([^=]+)=(.*),\2 \1,;Tx;p;:x d'
+    pm list packages $args | sed -r -e 's,package:([^=]+)=(.*),\2 \1,;t;d'
 }
 
 target="$(pick_user)"
@@ -90,7 +90,7 @@ fi
 pkgchoices="$tempdir/pkglist-missing.choices"
 while read pkg filename; do
     # application-label:'foo'
-    label="$(aapt dump badging "$filename" | sed -r -e "s,application-label:'(.*)',\\1,;Tx;p;:x d")"
+    label="$(aapt dump badging "$filename" | sed -r -e "s,application-label:'(.*)',\\1,;t;d")"
     printf "%s %s (%s)\n" "$filename" "$label" "$pkg"
 done < "$availpkgs" > "$pkgchoices"
 tgtpkg="$(choice "$pkgchoices" "Package to transfer")"
